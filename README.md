@@ -1,2 +1,2 @@
 # JogoDaForca
-Jogo da Forco desenvolvido em React
+## Jogo da Forca desenvolvido em React
