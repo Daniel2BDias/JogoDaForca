@@ -47,13 +47,13 @@ function App() {
 
   const clickouLetra = (letra) => {
 
-      let erros = nErros + 1;
+      let erros = nErros;
       
       setLetraClickada(letra);
       setLetrasClickadas([...letrasClickadas, letra])
 
       if(!palavraSecreta.includes(letra)){
-        setNerros(erros)
+        setNerros(nErros+1)
       }
 
       palavraNaTela(letra, erros);
