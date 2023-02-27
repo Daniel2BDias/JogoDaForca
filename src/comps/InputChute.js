@@ -1,4 +1,7 @@
-const InputChute = ({onclick, desabilitado}) => {
+const InputChute = ({onclick, desabilitado, erros}) => {
+    if(erros === 6){
+        desabilitado = true;
+    }
     return (
         <div className="input">
         <label>Já Sei A Palavra!</label>
