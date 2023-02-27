@@ -1,15 +1,27 @@
-import React from "react";
+const Letras = ({ letras, onclick, desabilita, letrasclickadas, comecou }) => {
 
-const Letras = props => {
-     const letras = props.letras;
-     const onclick = props.onclick;
-
-     
     return (
         <div className='letras'>
-            {letras.map(l => <button disabled data-test="letter" onClick={onclick}>{l}</button>)}
+            {letras.map(l => <Letra key={l} comecou={comecou} letrasclickadas={letrasclickadas} disabled={desabilita} onclick={onclick} letra={l} />)}
         </div>
+        
     );
-};
+}
+
+const Letra = ({letrasclickadas, letra, onclick, comecou}) => {
+    let desabilita = true;
+
+    if(comecou){
+        desabilita = false;
+    }
+
+    if(letrasclickadas.includes(letra)){
+        desabilita = true;
+    }
+
+    return (
+        <button disabled={desabilita} data-test="letter" onClick={() => onclick(letra)}>{letra}</button>
+    )
+}
 
 export default Letras;

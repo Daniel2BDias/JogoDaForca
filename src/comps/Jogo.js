@@ -1,13 +1,4 @@
-import React from "react";
-
-
-const Jogo = props => {
-
-    const palavras = props.palavras;
-    const onclick = props.onclick;
-
-    let erros = 0;
-
+const Jogo = ({palavras, onclick, erros}) => {
 
     return (
         <div className="jogo">
