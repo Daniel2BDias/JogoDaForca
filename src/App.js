@@ -12,14 +12,16 @@ function App() {
   let [nErros, setNerros] = useState(0);
   let [desabilita, setDisabled] = useState(true);
   let [desabilitaLetra, setDesabilitaLetra] = useState(true);
-  let [letraClickada, setClickada] = useState('');
+  let [letraClickada, setLetraClickada] = useState('');
   let [letrasClickadas, setLetrasClickadas] = useState([]);
   let [palavraSecreta, setPalavraSecreta] = useState([]);
   let [palavraExibida, setPalavraExibida] = useState('');
   let [palavraFormada, setPalavraFormada] = useState('');
   let [resultado, setResultado] = useState('');
-  
-  console.log(nErros, palavraExibida);
+  let [acabou, setAcabou] = useState(false);
+  console.log(palavraSecreta, letraClickada)
+
+  console.log(nErros)
   
   const escolheuPalavra = () => {
     
@@ -29,8 +31,9 @@ function App() {
     setNerros(0);
     setLetrasClickadas([]);
     setPalavraFormada([]);
-    setClickada('')
+    setLetraClickada('')
     setResultado('');
+    setAcabou(false);
     const palavraArray = palavras[Math.floor(Math.random()*palavras.length)].split('');
     setPalavraSecreta(palavraArray);
     let escondida = [];
@@ -39,51 +42,59 @@ function App() {
       }
     
     setPalavraExibida(escondida.join(''));
+    setPalavraFormada(escondida.join(''));
   }
 
   const clickouLetra = (letra) => {
-      setClickada(letra);
+
+      let erros = nErros + 1;
+      
+      setLetraClickada(letra);
       setLetrasClickadas([...letrasClickadas, letra])
 
-      palavraNaTela();
-      fimDeJogo();
-
       if(!palavraSecreta.includes(letra)){
-        let erros = nErros+1
         setNerros(erros)
       }
+
+      palavraNaTela(letra, erros);
   }
 
-  const fimDeJogo = () => {
-
-      if(nErros === 6){
+  const fimDeJogo = (erros, palavraNova) => {
+      if(erros === 6){
       setDisabled(true);
       setDesabilitaLetra(true);
       setResultado('derrota');
       setPalavraExibida(palavraSecreta.join(''));
+      setAcabou(true);
     }
-
-      if(palavraExibida === palavraSecreta.join('')){
-        setDisabled(true);
-        setDesabilitaLetra(true);
-        setResultado('vitoria');
-        setPalavraExibida(palavraSecreta.join(''));
-      }
+    if(!palavraNova.includes("_")){
+      setDisabled(true);
+      setDesabilitaLetra(true);
+      setResultado('vitoria');
+      setPalavraExibida(palavraSecreta.join(''));
+      setAcabou(true);
+    }
   }
 
 
-   function palavraNaTela(){
+   function palavraNaTela(letra, erros){
+
+    let palavraNova = palavraFormada.split('');
 
     for (let i = 0; i < palavraSecreta.length; i++){
-      if(palavraSecreta[i] === letraClickada){
-        palavraFormada[i] = palavraSecreta[i];
-        setPalavraExibida(palavraFormada.join(''))
+      if(palavraSecreta[i] === letra){
+        palavraNova[i] = palavraSecreta[i];
+        setPalavraExibida(palavraNova.join(''))
+        setPalavraFormada(palavraNova.join(''));
+        fimDeJogo(erros, palavraNova);
       } else if (palavraExibida[i] === "_"){
-          palavraFormada[i] = "_";
-          setPalavraExibida(palavraFormada.join(''));
+          palavraNova[i] = "_";
+          setPalavraExibida(palavraNova.join(''));
+          setPalavraFormada(palavraNova.join(''));
+          fimDeJogo(erros, palavraNova);
+        }
         }
       }
-    }
 
   const chutarPalavra = () => {
 
@@ -92,7 +103,7 @@ function App() {
   return (
     <div className='tudo'>
     <Jogo resultado={resultado} exibida={palavraExibida} palavras={palavras} onclick={escolheuPalavra} erros={nErros}/>
-    <Letras erros={nErros} letras={letras} comecou={comecou} desabilita={desabilitaLetra} onclick={clickouLetra} letrasclickadas={letrasClickadas} />
+    <Letras erros={nErros} letras={letras} acabou={acabou} comecou={comecou} desabilita={desabilitaLetra} onclick={clickouLetra} letrasclickadas={letrasClickadas} />
     <InputChute erros={nErros} onclick={chutarPalavra} desabilitado={desabilita}/>
     </div>
   );
